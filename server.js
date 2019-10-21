@@ -11,7 +11,12 @@ app.get('/', (req,res) => {
 });
 
 io.on('connection', (socket) => {
-    console.log('user conected');
+    socket.on('sendUsername', (username) => {
+        socket.emit('activeUsers', Object.keys(io.sockets.sockets));
+    });
+    socket.on('sendMessage', (message) => {
+        io.emit('reciveMessage', message);
+    });
     socket.on('message', (input) => {
         io.emit('message', input);
     });
