@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+  </head>
+  <body>
+    <button id="send">Send</button>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const send = document.getElementById('send');
+      send.addEventListener('click', () => {
+        console.log('click');
+        socket.emit('message', 'incoming Message');
+      });
+      socket.on('message', (incoming) => alert(incoming));
+    </script>
+  </body>
+</html>
