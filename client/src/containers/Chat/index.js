@@ -1,40 +1,36 @@
-import React, { useState } from 'react';
+/* eslint-disable react/forbid-prop-types */
+import React, { useEffect, useState } from 'react';
 import Proptypes from 'prop-types';
-import SocketIoClient from 'socket.io-client';
-import { useHistory } from 'react-router-dom';
-import { handleReciveMessage, handleSendMessage } from './helpers';
 import OnlineUsers from './OnlineUsers';
+import ChatRoom from './ChatRoom';
 
 
-const Chat = ({ userName }) => {
-  const history = useHistory();
-  if (!userName) {
-    history.push('/');
-  }
-  const [chatMessage, setChatmessage] = useState('');
-  const [messages, setMessages] = useState([]);
-  const io = SocketIoClient('192.168.0.6:3001');
-  io.emit('sendUsername', userName);
-  io.on('reciveMessage', (message) => handleReciveMessage(message, messages, setMessages));
+const Chat = ({ userName, io }) => {
+  const [activeUser, setActiveUser] = useState(null);
+  useEffect(() => {
+    io.emit('sendUsername', userName);
+    io.on('sendIdUserName', (user) => setActiveUser(user));
+  }, []);
+
+  useEffect(() => () => {
+    io.emit('userDisconected', userName);
+  }, []);
   return (
     <div>
       <div>
-        <strong>online OnlineUsers</strong>
-        <OnlineUsers io={io} />
+        <strong>online users</strong>
+        <OnlineUsers activeUser={activeUser} userName={userName} io={io} />
       </div>
-      <input
-        value={chatMessage}
-        type="text"
-        onChange={(e) => setChatmessage(e.target.value)}
-        onKeyPress={(e) => (e.key === 'Enter' ? handleSendMessage({ message: e.target.value, user: userName }, setChatmessage, io) : null)}
-      />
-      {messages.map((message) => <p key={`${message.message}-${Math.random()}`}>{`${message.user} ${message.message}`}</p>)}
+      <div>
+        <ChatRoom io={io} userName={userName} />
+      </div>
     </div>
   );
 };
 
 Chat.propTypes = {
   userName: Proptypes.string.isRequired,
+  io: Proptypes.any.isRequired,
 };
 
 export default Chat;

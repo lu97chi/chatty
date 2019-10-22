@@ -6,18 +6,19 @@ import {
 } from 'react-router-dom';
 import User from './containers/User';
 import Chat from './containers/Chat';
+import Main from './containers/Main';
 
 
 function App() {
-  const [username, setUsername] = useState('');
   return (
     <Router>
       <Switch>
         <Route path="/" exact>
-          <User handleEnter={(userName) => setUsername(userName)} />
+          <Main />
+          {/* <User handleEnter={(userName) => setUsername(userName)} /> */}
         </Route>
         <Route path="/chat">
-          <Chat userName={username} />
+          {/* <Chat userName={username} /> */}
         </Route>
       </Switch>
     </Router>
