@@ -11,15 +11,14 @@ const OnlineUsers = ({ io, activeUser }) => {
   io.on('sendActiveUsers', (active) => {
     setActiveUsers(active);
   });
-  console.log(activeUsers, 'active users');
-  console.log(activeUser, 'active user');
   return (
     <div>
       {
         Object.keys(activeUsers).map((key) => (
           <button type="button" onClick={() => handleClickEvent(key, io)} key={key}>
-            {activeUsers[key]}
-            {activeUser[activeUsers[key]] === key ? 'Eres tu' : null}
+            {activeUsers[key].username}
+            {activeUser[activeUsers[key].username] === key ? 'Eres tu' : null}
+            {activeUsers[key].writing && activeUser[activeUsers[key].username] !== key ? 'Escribiendo' : ''}
           </button>
         ))
       }

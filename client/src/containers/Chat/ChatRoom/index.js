@@ -1,22 +1,20 @@
 /* eslint-disable react/forbid-prop-types */
 import React, { useState } from 'react';
 import Proptypes from 'prop-types';
-import { handleReciveMessage, handleSendMessage } from './helpers';
+import { handleReciveMessage } from './helpers';
+import Message from '../../../components/Message';
+import InputMessage from '../../../components/InputMessage';
 
 
-const ChatRoom = ({ userName, io }) => {
-  const [chatMessage, setChatmessage] = useState('');
+const ChatRoom = ({ userName, io, activeUser }) => {
   const [messages, setMessages] = useState([]);
+  io.on('reciveMessageGroupal', (message) => handleReciveMessage(message, messages, setMessages));
   io.on('reciveMessage', (message) => handleReciveMessage(message, messages, setMessages));
+  io.on('writingStatus', (user) => console.log(user));
   return (
     <div>
-      <input
-        value={chatMessage}
-        type="text"
-        onChange={(e) => setChatmessage(e.target.value)}
-        onKeyPress={(e) => (e.key === 'Enter' ? handleSendMessage({ message: e.target.value, user: userName }, setChatmessage, io) : null)}
-      />
-      {messages.map((message) => <p key={`${message.message}-${Math.random()}`}>{`${message.user} ${message.message}`}</p>)}
+      <InputMessage io={io} userName={userName} activeUser={activeUser} />
+      {messages.map((message, i) => <Message message={message.message} itsWriting={i % 3 === 0} itsMe={message.user === userName} key={`${message.message}-${Math.random()}`} />)}
     </div>
   );
 };
@@ -24,6 +22,7 @@ const ChatRoom = ({ userName, io }) => {
 ChatRoom.propTypes = {
   userName: Proptypes.string.isRequired,
   io: Proptypes.any.isRequired,
+  activeUser: Proptypes.any.isRequired,
 };
 
 export default ChatRoom;

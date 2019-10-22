@@ -13,18 +13,29 @@ app.get('/', (req,res) => {
 io.on('connection', (socket) => {
     const ids =  Object.keys(io.sockets.sockets);
     socket.on('sendUsername', (username) => {
-        users[ids[ids.length - 1]] = username;
+        users[ids[ids.length - 1]] = {
+            username,
+            writing: false,
+        };
         io.to(socket.id).emit('sendIdUserName', { [username] : ids[ids.length - 1] });
         io.emit('sendActiveUsers', users);
     });
     socket.on('sendMessage', (message) => {
-        io.emit('reciveMessage', message);
+        io.emit('reciveMessageGroupal', message);
     });
     socket.on('disconnect', () => {
         delete users[socket.id];
     });
     socket.on('direcMessage', (options) => {
         io.to(options).emit('reciveMessage', { text: { user: socket.id, message: 'mensaje' } });
+    })
+
+    socket.on('userWriting', (writingOptions) => {
+        const user = users[socket.id];
+        if (user) {
+            users[socket.id].writing = writingOptions.writing;
+            io.emit('sendActiveUsers', users);
+        }
     })
 });
 

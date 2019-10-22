@@ -5,7 +5,7 @@ import Chat from '../Chat';
 
 const handleConection = (username, setUsername, setIo) => {
   setUsername(username);
-  setIo(SocketIoClient('172.16.7.51:8080'));
+  setIo(SocketIoClient('172.16.5.211:8080'));
 };
 
 const Main = () => {

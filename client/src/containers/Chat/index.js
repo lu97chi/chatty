@@ -22,7 +22,7 @@ const Chat = ({ userName, io }) => {
         <OnlineUsers activeUser={activeUser} userName={userName} io={io} />
       </div>
       <div>
-        <ChatRoom io={io} userName={userName} />
+        <ChatRoom activeUser={activeUser} io={io} userName={userName} />
       </div>
     </div>
   );
