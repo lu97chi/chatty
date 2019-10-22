@@ -24,7 +24,7 @@ io.on('connection', (socket) => {
         delete users[socket.id];
     });
     socket.on('direcMessage', (options) => {
-        io.to(options).emit('reciveMessage', {text: { user: socket.id, message: 'mensaje' } });
+        io.to(options).emit('reciveMessage', { text: { user: socket.id, message: 'mensaje' } });
     })
 });
 
