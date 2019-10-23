@@ -5,7 +5,8 @@ import Chat from '../Chat';
 
 const handleConection = (username, setUsername, setIo) => {
   setUsername(username);
-  setIo(SocketIoClient('172.16.5.211:8080'));
+  console.log(`${process.env.REACT_APP_IP_ADDRESS}:${process.env.REACT_APP_ENV_PORT}`);
+  setIo(SocketIoClient(`${process.env.REACT_APP_IP_ADDRESS}:${process.env.REACT_APP_ENV_PORT}`));
 };
 
 const Main = () => {
